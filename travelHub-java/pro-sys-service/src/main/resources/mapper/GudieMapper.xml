@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.GuideMapper">
+    <resultMap id="baseMap" type="guide">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="authorId" column="author_id"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="isFeatured" column="is_featured"/>
+        <result property="status" column="status"/>
+        <result property="tags" column="tags"/>
+        <result property="imagePath" column="image_path"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertGuide" parameterType="com.tjetc.entity.Guide"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO guide (
+            title,
+            content,
+            author_id,
+            update_time,
+            create_time,
+            view_count,
+            like,
+            comment_count,
+            is_featured,
+            tags,
+            status,
+            image_path
+        )
+        VALUES (
+                   #{title},
+                   #{content},
+                   #{authorId},
+                   #{updateTime},
+                   #{createTime},
+                   #{viewCount},
+                   #{likeCount},
+                   #{commentCount},
+                   #{isFeatured},
+                   #{tags},
+                   #{status},
+                   #{imagePath}
+               )
+    </insert>
+    <select id="findGuideById" resultType="Guide">
+        SELECT * FROM guide
+        WHERE id = #{id}
+    </select>
+    <select id="findPageAll" resultMap="baseMap">
+        SELECT *
+        FROM guide
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND title LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="isFeatured != null">
+            AND is_featured = #{isFeatured}
+        </if>
+        ORDER BY create_time
+        <if test="sortOrder != null and sortOrder == 'asc'">
+            ASC
+        </if>
+        <if test="sortOrder != null and sortOrder == 'desc'">
+            DESC
+        </if>
+    </select>
+    <select id="findUserPageAll" resultMap="baseMap">
+        SELECT *
+        FROM guide
+        WHERE 1=1 and author_id=#{userId}
+        <if test="title != null and title != ''">
+            AND title LIKE CONCAT('%', #{title}, '%')
+            OR content LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY create_time
+        <if test="sortOrder != null and sortOrder == 'asc'">
+            ASC
+        </if>
+        <if test="sortOrder != null and sortOrder == 'desc'">
+            DESC
+        </if>
+    </select>
+    <select id="findPageSelect" resultType="com.tjetc.common.guide.vo.data.GuideView">
+        SELECT
+        g.id,
+        g.title,
+        g.content,
+        g.view_count AS viewCount,
+        g.like_count AS likeCount,
+        g.comment_count AS commentCount,
+        g.create_time AS createTime,
+        u.username AS authorName,
+        u.image_path AS authorPath,
+        u.id AS authorId,
+        g.image_path AS imagePath,
+        g.is_featured AS isFeatured,
+        g.tags AS tags,
+        g.status AS status
+        FROM guide g
+        LEFT JOIN guide_tag gt ON g.id = gt.guide_id
+        LEFT JOIN t_user u ON g.author_id = u.id
+        WHERE 1=1
+        AND g.status = 1
+        <if test="title != null and title != ''">
+            AND g.title LIKE CONCAT('%', #{title}, '%')
+          OR g.content LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="tag != null and tag != ''">
+            AND g.tags LIKE CONCAT('%', #{tag}, '%')
+        </if>
+        <if test="day != null">
+            AND gt.day = #{day}
+        </if>
+        <if test="month != null">
+            AND gt.month = #{month}
+        </if>
+        <if test="fee != null">
+            AND gt.fee = #{fee}
+        </if>
+        <if test="people != null">
+            AND gt.people = #{people}
+        </if>
+
+        <choose>
+            <when test="sortOrder == 1">
+                ORDER BY g.create_time DESC
+            </when>
+            <when test="sortOrder == 0">
+                ORDER BY g.view_count DESC
+            </when>
+            <when test="sortOrder == 2">
+                ORDER BY g.like_count DESC
+            </when>
+            <otherwise>
+                ORDER BY g.view_count DESC
+            </otherwise>
+        </choose>
+    </select>
+    <select id="selectByTwoId" resultType="com.tjetc.entity.GuideLike">
+        select *
+        from guide_like
+        where user_id=#{userId} and guide_id=#{guideId}
+    </select>
+    <select id="selectByHot" resultType="com.tjetc.common.guide.vo.data.GuideView">
+        SELECT
+            guide.*,
+            t_user.username as authorName,
+            t_user.image_path as authorPath
+        FROM
+            guide JOIN t_user ON
+                guide.author_id = t_user.id
+        where guide.is_featured = 1 and guide.status = 1
+        ORDER BY
+            guide.view_count DESC
+            LIMIT 5;
+
+    </select>
+    <select id="selectByTag" resultMap="baseMap">
+        select *from guide
+    </select>
+    <select id="listMaps" resultMap="baseMap">
+        select *
+        from guide
+    </select>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tjetc.dao.ScenicMapper">
+
+    <resultMap id="baseMap" type="scenic">
+        <id property="id" column="id"></id>
+        <result column="spot_name" property="spotName"></result>
+        <result column="location" property="location"></result>
+        <result column="description" property="description"></result>
+        <result column="opening_hours" property="openingHours"></result>
+        <result column="ticket_price" property="ticketPrice"></result>
+        <result column="province" property="province"></result>
+        <result column="stars" property="stars"></result>
+        <result column="is_featured" property="featured"></result>
+        <result column="contact" property="contact"></result>
+        <result column="image_path" property="imagePath"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="www" property="www"></result>
+    </resultMap>
+    <select id="selectPageLikeSpotName" resultMap="baseMap">
+        select *
+        from scenic
+        where spot_name like concat('%',#{spotName},'%')
+    </select>
+    <select id="selectPageLikeSpotNameAndTime" resultMap="baseMap">
+        SELECT *
+        FROM scenic
+        WHERE 1=1
+        <if test="spotName != null and spotName != ''">
+            AND spot_name LIKE CONCAT('%', #{spotName}, '%')
+        </if>
+        <if test="province != null and province != ''">
+            AND province = #{province}
+        </if>
+        <if test="starSelect != null and starSelect != ''">
+            AND stars = #{starSelect}
+        </if>
+        <if test="isFeatured != null and isFeatured != ''">
+            AND is_featured = #{isFeatured}
+        </if>
+        ORDER BY update_time
+        <if test="sortOrder != null and sortOrder == 'asc'">
+            ASC
+        </if>
+        <if test="sortOrder != null and sortOrder == 'desc'">
+            DESC
+        </if>
+    </select>
+
+    <select id="selectPageAll" resultMap="baseMap">
+        SELECT *
+        FROM scenic
+        WHERE 1=1
+        <if test="spotName != null and spotName != ''">
+            AND spot_name LIKE CONCAT('%', #{spotName}, '%')
+        </if>
+        <if test="province != null and province != ''">
+            AND province = #{province}
+        </if>
+        <if test="starSelect != null and starSelect != ''">
+            AND stars = #{starSelect}
+        </if>
+        <if test="isFeatured != null and isFeatured != ''">
+            AND is_featured = #{isFeatured}
+        </if>
+    </select>
+    <select id="selectBySpotName" resultMap="baseMap">
+        select  *
+        from scenic
+        where spot_name = #{spotName}
+    </select>
+    <select id="selectByName" resultMap="baseMap">
+        select  *
+        from scenic
+        where spot_name LIKE CONCAT('%', #{spotName}, '%')
+           OR province LIKE CONCAT('%', #{spotName}, '%')
+           OR location LIKE CONCAT('%', #{spotName}, '%');
+    </select>
+    <select id="selectByHot" resultMap="baseMap">
+        select *
+        from scenic
+        where is_featured = 1
+    </select>
+    <select id="selectByNear" resultMap="baseMap">
+        select *
+        from scenic
+        where is_featured = 1 and province = #{location}
+    </select>
+    <select id="findByTag" resultMap="baseMap">
+        select *
+        from scenic
+        where tags LIKE CONCAT('%', #{tags}, '%')
+    </select>
+</mapper>

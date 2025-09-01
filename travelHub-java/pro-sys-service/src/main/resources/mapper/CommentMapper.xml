@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.CommentMapper">
+    <resultMap id="baseMap" type="comment">
+        <id column="id" property="id" />
+        <result column="content" property="content" />
+        <result column="guide_id" property="guideId" />
+        <result column="user_id" property="userId" />
+        <result column="like_count" property="likeCount" />
+        <result column="parent_id" property="parentId" />
+        <result column="apply_count" property="applyCount" />
+        <result column="is_delete" property="isDelete" />
+        <result column="root" property="root" />
+
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <select id="pageByTimeAndTitle" resultMap="baseMap">
+        SELECT
+        c.*,
+        g.title AS guideTitle,
+        u.username AS userName,
+        pu.username AS replyToUser
+        FROM
+        comment c
+        INNER JOIN
+        guide g ON c.guide_id = g.id
+        INNER JOIN
+        t_user u ON c.user_id = u.id
+        LEFT JOIN
+        comment pc ON c.parent_id = pc.id
+        LEFT JOIN
+        t_user pu ON pc.user_id = pu.id
+        WHERE
+        c.root IS NULL -- 只获取顶级评论
+        AND (g.title LIKE CONCAT('%', #{title}, '%') OR c.content LIKE CONCAT('%', #{title}, '%'))
+        ORDER BY
+        c.created_time
+        <if test="sortOrder != null and sortOrder == 'asc'">
+            ASC
+        </if>
+        <if test="sortOrder != null and sortOrder == 'desc'">
+            DESC
+        </if>
+
+    </select>
+
+    <select id="findChildRow" resultMap="baseMap">
+        SELECT
+            c.id,
+            c.content,
+            u1.username AS username,
+            u2.username AS replyToUser,
+            c.created_time,
+            g.title
+        FROM
+            comment c
+                LEFT JOIN
+            t_user u1 ON c.user_id = u1.id
+                LEFT JOIN
+            comment pc ON c.parent_id = pc.id
+                LEFT JOIN
+            t_user u2 ON pc.user_id = u2.id
+                LEFT JOIN
+            guide g ON c.guide_id = g.id
+        WHERE
+            c.root = #{id};
+    </select>
+
+    <select id="selectById" resultMap="baseMap">
+        select *
+        from comment
+        where id =#{id}
+    </select>
+    <select id="selectByGuideId" resultMap="baseMap">
+        SELECT
+            c.*,
+            u.image_path AS UIPath,
+            u.location AS useLocation,
+            u.username AS username,
+            r.username AS replyToUser
+        FROM
+            comment c
+                JOIN
+            t_user u ON c.user_id = u.id
+                LEFT JOIN
+            comment rc ON c.parent_id = rc.id
+                LEFT JOIN
+            t_user r ON rc.user_id = r.id
+        WHERE
+            c.guide_id = #{id}
+
+    </select>
+    <select id="selectByTwoId" resultType="com.tjetc.entity.CommentLike">
+        select *
+        from comment_like
+        where user_id=#{userId} and comment_id=#{commentId}
+    </select>
+    <select id="listMaps" resultMap="baseMap">
+        select *
+        from comment
+    </select>
+</mapper>

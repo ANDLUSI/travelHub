@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/experience/experience",
+    "pages/myPlan/myPlan",
+    "pages/aiChat/aiChat",
+    "pages/personalCenter/personalCenter",
+    "pages/loginAndReg/index",
+    "pages/loginAndReg/register"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/tabBar/主页.png",
+        "selectedIconPath": "static/tabBar/主页1.png"
+      },
+      {
+        "pagePath": "pages/experience/experience",
+        "iconPath": "static/tabBar/列表.png",
+        "selectedIconPath": "static/tabBar/列表1.png"
+      },
+      {
+        "pagePath": "pages/myPlan/myPlan",
+        "iconPath": "static/tabBar/计划.png",
+        "selectedIconPath": "static/tabBar/计划1.png"
+      },
+      {
+        "pagePath": "pages/aiChat/aiChat",
+        "iconPath": "static/tabBar/问答.png",
+        "selectedIconPath": "static/tabBar/问答1.png"
+      },
+      {
+        "pagePath": "pages/personalCenter/personalCenter",
+        "iconPath": "static/tabBar/mine.png",
+        "selectedIconPath": "static/tabBar/mine1.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

@@ -1,0 +1,36 @@
+{
+  "name": "admin-pro-front",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "server": "vue-cli-service serve",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^43.0.0",
+    "@ckeditor/ckeditor5-vue": "^7.0.0",
+    "@element-plus/icons-vue": "^2.3.1",
+    "@types/amap-js-api": "^1.4.16",
+    "@vueup/vue-quill": "^1.2.0",
+    "axios": "^1.7.4",
+    "element-plus": "^2.8.0",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persist": "^1.0.0",
+    "qs": "^6.13.0",
+    "quill": "^2.0.2",
+    "vue": "^3.4.29",
+    "vue-awesome": "^4.5.0",
+    "vue-baidu-map": "^0.21.22",
+    "vue-baidu-map-3x": "^1.0.39",
+    "vue-quill-editor": "^3.0.6",
+    "vue-router": "^4.3.3",
+    "vue3-quill": "^0.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.1"
+  }
+}

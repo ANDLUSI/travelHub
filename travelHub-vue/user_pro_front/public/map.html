@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百度地图地点检索</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #F5DEB3;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-name {
+            display: flex;
+            align-items: center;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 38px;
+            font-weight: bold;
+            color: #ff0000;
+        }
+
+        .menu {
+            background-color: #F5DEB3;
+            display: flex;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+
+        .menu-item {
+            margin: 0 15px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 4px;
+            transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            color: #D2691E;
+            background-color: #F3C9A9;
+            transform: scale(1.05);
+            border-bottom: 2px solid #D2691E;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-right: 20px;
+            padding: 10px;
+        }
+
+        .icon-text {
+            margin-left: 8px;
+            color: #333;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .icon-container:hover .icon-text {
+            color: #D2691E;
+        }
+
+        .user-avatar:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        }
+
+        #map {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+        }
+
+        #search-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #keyword {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        #search-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 10px;
+        }
+
+        #search-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="site-name">TripMate</div>
+        <nav class="menu">
+            <a href="/home" class="menu-item">首页</a>
+            <a href="/guide" class="menu-item">旅游攻略</a>
+            <a href="/map" class="menu-item">景点资讯</a>
+            <a href="/travel-plans" class="menu-item">旅游计划</a>
+        </nav>
+        <div class="right-section">
+            <div class="icon-container" onclick="goToPersonalCenter()">
+                <span class="icon-text">消息</span>
+            </div>
+            <div class="icon-container" onclick="goToPersonalCenter()">
+                <span class="icon-text">个人中心</span>
+            </div>
+    </header>
+    <div id="container">
+        
+
+        <div id="search-container">
+            <input type="text" id="keyword" placeholder="请输入地点名称">
+            <button id="search-button" onclick="searchPlace()">搜索</button>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <script src="https://api.map.baidu.com/api?v=3.0&type=webgl&ak=9eOjEj6fWuHshpdGqVjO0lVesYdIsgab"></script>
+    <script>
+        // 初始化地图
+        var map = new BMapGL.Map("map");
+        var point = new BMapGL.Point(116.404, 39.915);  // 默认中心点为北京市
+        map.centerAndZoom(point, 12);  // 设置地图中心点及缩放级别
+        map.enableScrollWheelZoom(true);  // 启用滚轮放大缩小
+
+        function searchPlace() {
+            var keyword = document.getElementById("keyword").value;
+            var localSearch = new BMapGL.LocalSearch(map, {
+                renderOptions: { map: map }
+            });
+            localSearch.search(keyword);  // 根据输入的关键词进行搜索
+        }
+
+        function goToPersonalCenter() {
+            window.location.href = '/person';
+        }
+    </script>
+</body>
+
+</html>

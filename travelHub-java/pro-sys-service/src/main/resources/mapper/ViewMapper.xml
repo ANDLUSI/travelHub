@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.ViewMapper">
+    <resultMap id="baseMap" type="view">
+        <id property="id" column="id"></id>
+        <result property="userId" column="user_id"></result>
+        <result column="guide_id" property="guideId"></result>
+        <result column="lastview_time" property="lastviewTime"></result>
+    </resultMap>
+    <select id="selectPanChong" resultMap="baseMap">
+        select *
+        from view
+        where user_id = #{userId} and guide_id  = #{guideId}
+    </select>
+</mapper>

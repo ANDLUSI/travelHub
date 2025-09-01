@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.AdminMapper">
+    <resultMap id="baseMap" type="admin">
+        <id property="id" column="id"></id>
+        <result column="username" property="username"></result>
+        <result column="password" property="password"></result>
+        <result column="image_path" property="imagePath"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="lastlog_time" property="lastlogTime"></result>
+        <result column="role" property="role"></result>
+        <result column="phone" property="phone"></result>
+        <result column="email" property="email"></result>
+    </resultMap>
+    <select id="selectByUsernameAndPassword" resultMap="baseMap">
+        select id,
+               username,
+               password,
+               phone,
+               email,
+               image_path,
+               update_time,
+               create_time,
+               lastlog_time,
+               role
+        from t_admin
+        where username = #{username}
+          and password = #{password}
+    </select>
+
+    <select id="selectPageLikeUsername" resultMap="baseMap">
+        select id,username,password,phone,image_path,update_time,create_time,lastlog_time,role
+        from t_admin
+        where username like concat('%',#{username},'%')
+        order by
+            case when lastlog_time is null then 1 else 0 end,  -- 把 NULL 的排在最后
+            lastlog_time desc
+    </select>
+    <select id="selectByUsername" resultMap="baseMap">
+        select  id,username,image_path,phone,update_time,create_time,lastlog_time,role
+        from t_admin
+        where username = #{username}
+    </select>
+
+    <select id="selectPageLikeUsernameAndRole" resultMap="baseMap">
+        select id, username, phone, image_path, update_time, create_time, lastlog_time, role
+        from t_admin
+        where username like concat('%', #{username}, '%')
+          and role = #{role}
+        order by
+            case when lastlog_time is null then 1 else 0 end,
+            lastlog_time desc
+    </select>
+
+</mapper>

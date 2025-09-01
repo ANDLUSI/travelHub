@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.MessageMapper">
+    <resultMap id="baseMap" type="message">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"></result>
+        <result column="notice_id" property="noticeId"></result>
+        <result property="isRead" column="is_read"></result>
+        <result property="notified" column="notified"></result>
+    </resultMap>
+    <select id="findNum" resultMap="baseMap">
+        select *
+        from message_read
+        where user_id =#{id}
+        and is_read = 0 and notified = 0
+    </select>
+
+
+
+</mapper>
